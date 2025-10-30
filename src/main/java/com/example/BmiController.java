@@ -41,10 +41,12 @@ public class BmiController implements Initializable {
     @FXML
     private Label resultLabel;
 
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
     public void calculateBmi() {
         try {
             double weight = Double.parseDouble(weightInput.getText());
-            double height = Double.parseDouble(heightInput.getText()) / 100.0;
+            double height = Double.parseDouble(heightInput.getText()) / 100;
             double bmi = weight / (height * height);
             resultLabel.setText(rb.getString("labelResult") + " " + String.format("%.2f", bmi));
         } catch (NumberFormatException e) {
@@ -70,8 +72,6 @@ public class BmiController implements Initializable {
         setLanguage(new Locale("en", "US"));
         startClock();
     }
-
-    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private void startClock() {
         Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
