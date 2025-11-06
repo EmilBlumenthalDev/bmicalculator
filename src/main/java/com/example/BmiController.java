@@ -42,15 +42,16 @@ public class BmiController implements Initializable {
     private Label resultLabel;
 
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private java.util.Map<String, String> localizedStrings;
 
     public void calculateBmi() {
         try {
             double weight = Double.parseDouble(weightInput.getText());
             double height = Double.parseDouble(heightInput.getText()) / 100;
             double bmi = weight / (height * height);
-            resultLabel.setText(rb.getString("labelResult") + " " + String.format("%.2f", bmi));
+            resultLabel.setText(localizedStrings.getOrDefault("result", "Result") + " " + String.format("%.2f", bmi));
         } catch (NumberFormatException e) {
-            resultLabel.setText(rb.getString("errorInvalidInput"));
+            resultLabel.setText(localizedStrings.getOrDefault("invalid", "Invalid input"));
         }
     }
 
@@ -64,7 +65,7 @@ public class BmiController implements Initializable {
                 case "English" -> new Locale("en", "US");
                 case "French" -> new Locale("fr", "FR");
                 case "Urdu" -> new Locale("ur", "UR");
-                case "Vietnamese" -> new Locale("vi", "VI");
+                case "Vietnamese" -> new Locale("vn", "VN");
                 default -> new Locale("en", "US");
             };
             setLanguage(locale);
@@ -74,20 +75,27 @@ public class BmiController implements Initializable {
     }
 
     private void startClock() {
-        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            if (timeLabel != null) {
-                timeLabel.setText("Time: " + LocalTime.now().format(timeFormatter));
-            }
-        }));
+        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateClock()));
         clock.setCycleCount(Timeline.INDEFINITE);
         clock.play();
+        updateClock();
+    }
+
+    private void updateClock() {
+        if (timeLabel != null && localizedStrings != null) {
+            String timeText = localizedStrings.getOrDefault("localTime", "Time");
+            String currentTime = LocalTime.now().format(timeFormatter);
+            timeLabel.setText(timeText + ": " + currentTime);
+        }
     }
 
     private void setLanguage(Locale locale) {
-        rb = ResourceBundle.getBundle("MessagesBundle", locale);
-        weightLabel.setText(rb.getString("weightLabel"));
-        heightLabel.setText(rb.getString("heightLabel"));
-        calculateButton.setText(rb.getString("buttonCalculate"));
-        resultLabel.setText(rb.getString("labelResult"));
+        localizedStrings = LocalizationService.getLocalizedStrings(locale);
+        weightLabel.setText(localizedStrings.getOrDefault("weight", "Weight"));
+        heightLabel.setText(localizedStrings.getOrDefault("height", "Height"));
+        calculateButton.setText(localizedStrings.getOrDefault("calculate", "Calculate"));
+        resultLabel.setText(localizedStrings.getOrDefault("result", "Result"));
+        timeLabel.setText(localizedStrings.getOrDefault("localTime", "Time"));
+        updateClock();
     }
 }
