@@ -21,7 +21,6 @@ import java.net.URL;
 import javafx.fxml.Initializable;
 
 public class BmiController implements Initializable {
-    private ResourceBundle rb;
     @FXML
     private Label timeLabel;
     @FXML
