@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import java.net.URL;
+import java.text.DecimalFormat;
 
 import javafx.fxml.Initializable;
 
@@ -42,13 +43,16 @@ public class BmiController implements Initializable {
 
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private java.util.Map<String, String> localizedStrings;
+    private Locale currentLocale;
 
     public void calculateBmi() {
         try {
             double weight = Double.parseDouble(weightInput.getText());
-            double height = Double.parseDouble(heightInput.getText()) / 100;
+            double height = Double.parseDouble(heightInput.getText()) / 100.0;
             double bmi = weight / (height * height);
-            resultLabel.setText(localizedStrings.getOrDefault("result", "Result") + " " + String.format("%.2f", bmi));
+            DecimalFormat df = new DecimalFormat("#0.00");
+            resultLabel.setText(localizedStrings.getOrDefault("result", "Your BMI is") + " " + df.format(bmi));
+            BMIResultService.saveResult(weight, height * 100, bmi, currentLocale.getLanguage());
         } catch (NumberFormatException e) {
             resultLabel.setText(localizedStrings.getOrDefault("invalid", "Invalid input"));
         }
@@ -96,5 +100,6 @@ public class BmiController implements Initializable {
         resultLabel.setText(localizedStrings.getOrDefault("result", "Result"));
         timeLabel.setText(localizedStrings.getOrDefault("localTime", "Time"));
         updateClock();
+        currentLocale = locale;
     }
 }
