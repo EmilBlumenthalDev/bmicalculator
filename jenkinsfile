@@ -9,7 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
         DOCKER_IMAGE = 'litioner/bmi_calculator'
-        DOCKER_TAG = '1.0'
+        DOCKER_TAG = '1.3'
         SONARQUBE_SERVER = 'SonarQubeServer'
         SONAR_TOKEN = "squ_7dbdbd1f145e6a37fa9bca419c7fe306017af18e"
     }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh "docker build . -t ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                     } else {
                         bat "docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                     }
