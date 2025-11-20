@@ -10,7 +10,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
         DOCKER_IMAGE = 'litioner/bmi_calculator'
         DOCKER_TAG = '1.0'
-        SONARQUBE_SERVER = 'SonarQube_Server'
+        SONARQUBE_SERVER = 'SonarQubeServer'
         SONAR_TOKEN = "squ_7dbdbd1f145e6a37fa9bca419c7fe306017af18e"
     }
 
